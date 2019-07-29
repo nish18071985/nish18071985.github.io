@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>CS 498 Data Visualization</title>
+      <meta name="final project" content="Data Visualization">
+      <link rel="stylesheet" href="main.css">
+      <script src="https://d3js.org/d3.v4.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/1.12.1/d3-annotation.min.js"></script>
+   </head>
+   <body>
+      
+      <div class="slideshow-container">
+        <div class="mySlides fade">
+            <div class="numbertext">1 / 3</div>
+            <h4>HDI : Human Development Index by Country</h4>
+            <p><i>Let's take a look at the HDI of a few countries over past few years and observe how over time countries have improved over it.
+            Several studies have been undertaken in the past on factors affecting life expectancy considering demographic variables, income composition and mortality rates. But none of them 
+            have factored the impact of HDI on it. That's what we aim to look at. Let's see if HDI has any impacts on it or not...</i></p>
+            <p style="color:blue"><i>
+            [Hover over each country on the legend to see the change in Life expectancy for that country in the chart clearly.
+            The arrows on the sides or the dots at the bottom helps you navigate between different scenes like a slide show.
+            Upper right hand corner of the page specifies the page number you are on.]
+            </i></p>
+            <svg id="HDIChart" width="1100" height="600" style="margin-left:30px"></svg>
+         </div>
+         <div class="mySlides fade">
+            <div class="numbertext">2 / 3</div>
+            <h4>Life Expectancy by Country</h4>
+            <p><i>We will now look at how Life expectancies of a few countries have changed over past few years.
+            In general if you observe that with improving HDI we have improving life expectancy for few countries, but do they actually hold some kind of relationship among themselves.
+            Let's take a look at it next....</i></p>
+            <p style="color:blue"><i>
+            [Hover over each country on the legend to see the change in Life expectancy for that country in the chart clearly.
+            The arrows on the sides or the dots at the bottom helps you navigate between different scenes like a slide show. 
+            Upper right hand corner of the page specifies the page number you are on.]
+            </i></p>
+             <svg id="LEChart" width="1100" height="600" style="margin-left:30px"></svg>
+
+         </div>
+         
+         <div class="mySlides fade">
+            <div class="numbertext">3 / 3</div>
+            <h4>Life Expectancy Vs HDI</h4>
+            <p><i>Lastly we draw a comparison between Life Expectancy and HDI of a few countries for a particular year (<b>default is the year 2000</b>).
+            From our observation of the plot we can conclude that there is indeed a positive linear relationship between Life expectancy and HDI. So countries with lower Life expectancies
+            would like to increase its healthcare expenditure in order to improve its average lifespan.</i></p>
+            <p style="color:blue"><i>
+            [Please select a Year from the dropdown below to see the relationship between Life expectancy and HDI for that year.
+            The arrows on the sides or the dots at the bottom helps you navigate between different scenes like a slide show.
+            Upper right hand corner of the page specifies the page number you are on.]
+            </i></p>
+            <h5 style="position:absolute; top:20%; left:28%">Please select year</h5>
+            <select id="yearDrop" style="position:absolute; top:23%; left:40%" onchange="ChangePlot()">
+                <option value="2000">2000</option>
+                <option value="2001">2001</option>
+                <option value="2002">2002</option>
+                <option value="2003">2003</option>
+                <option value="2004">2004</option>
+                <option value="2005">2005</option>
+                <option value="2006">2006</option>
+                <option value="2007">2007</option>
+                <option value="2008">2008</option>
+                <option value="2009">2009</option>
+                <option value="2010">2010</option>
+                <option value="2011">2011</option>
+                <option value="2012">2012</option>
+                <option value="2013">2013</option>
+                <option value="2014">2014</option>
+                <option value="2015">2015</option>
+            </select>
+            <svg id="LEHDIChart" width="1100" height="600" style="margin-left:30px"></svg>
+         </div>
+         <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+         <a class="next" onclick="plusSlides(1)">&#10095;</a>
+      </div>
+      <br>
+      <div style="text-align:center;"">
+         <span class="dot" onclick="currentSlide(1)"></span> 
+         <span class="dot" onclick="currentSlide(2)"></span> 
+         <span class="dot" onclick="currentSlide(3)"></span> 
+      </div>
+      <script>
+        var width = 1100;
+        var height = 600;
+        var margin = 0;
+
+        // Life expectancy
+        var svg = d3.select("#LEChart")
+        .attr("width", width - margin)
+        .attr("height", height - margin);
+        //Define X & Y axis
+        var xScale = d3.scalePoint()
+        .domain(['2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015'])
+        .range([0, 650]);
+        var x_axis = d3.axisBottom()
+        .scale(xScale);
+        var g = svg.append("g");
+        g.append("g")
+        .attr("transform", "translate(100," + 500 + ")")
+        .call(x_axis);
+        //x axix label
+        g.append("text")
+        .attr("y", height - 50)
+        .attr("x", (width - 300) / 2)
+        .attr("font-size", 12)
+        .text("Year");
+        var yScale = d3.scaleLinear()
+        .domain([10, 90])
+        .range([600, 150]);
+        var y_axis = d3.axisLeft()
+        .scale(yScale);
+        g.append("g")
+        .attr("transform", "translate(100," + -100 + ")")
+        .call(y_axis);
+        // y axis label
+        g.append("text")
+        .attr("y", height / 2)
+        .attr("x", 30)
+        .attr("font-size", 12)
+        .text("Life");
+        g.append("text")
+        .attr("y", height / 2 + 12)
+        .attr("x", 10)
+        .attr("font-size", 12)
+        .text("Expectancy");
+        var colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+        //annotations
+        var annotations = [
+            {
+                note: {
+                label: "Botswana had the highest % increase in Life Expectancy over years",
+                align: "left",  // try right or left
+                wrap: 200,  // try something smaller to see text split in several lines
+                padding: 10 
+                },
+                connector: {
+                end: "arrow",        // Can be none, or arrow or dot
+                type: "line",      // ?? don't know what it does
+                lineType : "vertical",    // ?? don't know what it does
+                endScale: 10     // dot size
+                },
+                x: 350,
+                y: 305,
+                dy: 120,
+                dx: 80
+            }
+        ]
+
+        var makeAnnotations = d3.annotation().annotations(annotations)
+        g.append("g")
+        .call(makeAnnotations)
+
+
+        d3.csv("HDI_LifeExpectancy_Data.csv", function(data) {
+        //Getting distinct Countries from the list
+        var Country = data.map(function(obj) {
+        return obj.Country;
+        });
+        Country = Country.filter(function(v, i) {
+        return Country.indexOf(v) == i;
+        });
+        //Filtering all other data points based on Country List
+        for (var i = 0; i < Country.length; i++) {
+        var newArray = data.filter(function(item) {
+        return item.Country == Country[i];
+        });
+        var lineGenerator = d3.line();
+        var points = [];
+        for (var j = 0; j < newArray.length; j++) {
+        points.push([xScale(newArray[j].Year), yScale(newArray[j].Lifeexpectancy)])
+        }
+        var pathData = lineGenerator(points);
+        var path = g.append('path')
+        .attr('d', pathData)
+        .attr("id", Country[i] + "path1")
+        .attr("transform", "translate(100," + -50 + ")");
+        path.style("stroke", colorScale(i));
+        g.append("rect")
+        .attr("x", 940)
+        .attr("y", ((17 - i) * 20) - 10)
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("fill", colorScale(i));
+        g.append("text")
+        .attr("y", (17 - i) * 20)
+        .attr("x", 960)
+        .attr("text-anchor", "begin")
+        .attr("stroke", "grayscale")
+        .attr("font-size", 12)
+        .attr("id", Country[i])
+        .on("mouseover", onMouseOverPath1)
+        .on("mouseout", onMouseOutPath1)
+        .text(Country[i]);
+        }
+        });
+
+        //HDI by Country
+        var svg1 = d3.select("#HDIChart")
+        .attr("width", width - margin)
+        .attr("height", height - margin);
+        //Define X & Y axis
+        var xScale1 = d3.scalePoint()
+        .domain(['2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015'])
+        .range([0, 650]);
+        var x_axis1 = d3.axisBottom()
+        .scale(xScale1);
+        var g1 = svg1.append("g");
+        g1.append("g")
+        .attr("transform", "translate(100," + 500 + ")")
+        .call(x_axis1);
+        //x axix label
+        g1.append("text")
+        .attr("y", height - 50)
+        .attr("x", (width - 300) / 2)
+        .attr("font-size", 12)
+        .text("Year");
+        var yScale1 = d3.scaleLinear()
+        .domain([0.1, 1])
+        .range([600, 150]);
+        var y_axis1 = d3.axisLeft()
+        .scale(yScale1);
+        g1.append("g")
+        .attr("transform", "translate(100," + -100 + ")")
+        .call(y_axis1);
+        // y axis label
+        g1.append("text")
+        .attr("y", height / 2)
+        .attr("x", 30)
+        .attr("font-size", 12)
+        .text("HDI");
+        var colorScale1 = d3.scaleOrdinal(d3.schemeCategory10);
+
+        //annotations
+        var annotations = [
+            {
+                note: {
+                label: "Botswana had the highest % increase in HDI over years",
+                align: "left",  // try right or left
+                wrap: 200,  // try something smaller to see text split in several lines
+                padding: 10 
+                },
+                connector: {
+                end: "arrow",        // Can be none, or arrow or dot
+                type: "line",      // ?? don't know what it does
+                lineType : "vertical",    // ?? don't know what it does
+                endScale: 10     // dot size
+                },
+                x: 630,
+                y: 245,
+                dy: -30,
+                dx: -70
+            }
+        ]
+
+        var makeAnnotations = d3.annotation().annotations(annotations)
+        g1.append("g")
+        .call(makeAnnotations)
+
+        d3.csv("HDI_LifeExpectancy_Data.csv", function(data) {
+        //Getting distinct Countries from the list
+        var Country = data.map(function(obj) {
+        return obj.Country;
+        });
+        Country = Country.filter(function(v, i) {
+        return Country.indexOf(v) == i;
+        });
+        //Filtering all other data points based on Country List
+        for (var i = 0; i < Country.length; i++) {
+        var newArray = data.filter(function(item) {
+        return item.Country == Country[i];
+        });
+        var lineGenerator = d3.line();
+        var points = [];
+        for (var j = 0; j < newArray.length; j++) {
+        points.push([xScale1(newArray[j].Year), yScale1(newArray[j].HDI)])
+        }
+        var pathData = lineGenerator(points);
+        var path = g1.append('path')
+        .attr('d', pathData)
+        .attr("id", Country[i] + "path2")
+        .attr("transform", "translate(100," + -50 + ")");
+        path.style("stroke", colorScale1(i));
+        g1.append("rect")
+        .attr("x", 940)
+        .attr("y", ((17 - i) * 20) - 10)
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("fill", colorScale(i));
+        g1.append("text")
+        .attr("y", (17 - i) * 20)
+        .attr("x", 960)
+        .attr("text-anchor", "begin")
+        .attr("stroke", "grayscale")
+        .attr("font-size", 12)
+        .attr("id", Country[i])
+        .on("mouseover", onMouseOverPath2)
+        .on("mouseout", onMouseOutPath2)
+        .text(Country[i]);
+        }
+
+        
+        });
+
+
+        //Life expectancy vs HDI
+        var svg2 = d3.select("#LEHDIChart")
+        .attr("width", width - margin)
+        .attr("height", height - margin);
+        //Define X & Y axis
+        var xScale2 = d3.scaleLinear()
+        .domain([10,90])
+        .range([0, 650]);
+        var x_axis2 = d3.axisBottom()
+        .scale(xScale2);
+        var g2 = svg2.append("g");
+        g2.append("g")
+        .attr("transform", "translate(100," + 500 + ")")
+        .call(x_axis2);
+        //x axix label
+        g2.append("text")
+        .attr("y", height - 50)
+        .attr("x", (width - 300) / 2)
+        .attr("font-size", 12)
+        .text("Life Expectancy");
+        var yScale2 = d3.scaleLinear()
+        .domain([0.1, 1])
+        .range([600, 50]);
+        var y_axis2 = d3.axisLeft()
+        .scale(yScale2);
+        g2.append("g")
+        .attr("transform", "translate(100," + -100 + ")")
+        .call(y_axis2);
+        // y axis label
+        g2.append("text")
+        .attr("y", height / 2)
+        .attr("x", 30)
+        .attr("font-size", 12)
+        .text("HDI");
+        var colorScale2 = d3.scaleOrdinal(d3.schemeCategory10);
+        d3.csv("HDI_LifeExpectancy_Data.csv", function(data) {
+        
+        //Getting distinct Countries from the list
+        var Country = data.map(function(obj) {
+        return obj.Country;
+        });
+        
+        Country = Country.filter(function(v, i) {
+        return Country.indexOf(v) == i;
+        });
+
+        var selectedYear = document.getElementById("yearDrop").value
+
+        //get data only for a particular Year
+        var newArrayYear = data.filter(function(item) {
+            return item.Year == selectedYear;
+        });
+
+        
+        //annotations
+        var annotations = [
+            {
+                note: {
+                    label: "Each year shows a positive linear relationship between Life expectancy and HDI",
+                    align: "middle",  // try right or left
+                    wrap: 20,  // try something smaller to see text split in several lines
+                },
+                connector: {
+                end: "arrow",        // Can be none, or arrow or dot
+                type: "curve",      // ?? don't know what it does
+                lineType : "vertical",    // ?? don't know what it does
+                endScale: 10     // dot size
+                },
+                x: 480,
+                y: 350,
+                dy: 50,
+                dx: 50
+            }
+        ]
+
+        var makeAnnotations = d3.annotation().textWrap(50).annotations(annotations)
+        g2.append("g")
+        .call(makeAnnotations)
+
+        
+        for (var j = 0; j < newArrayYear.length; j++) {
+        g2.append("rect")
+        .attr("x", 940)
+        .attr("y", ((17 - j) * 20) - 10)
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("fill", colorScale2(j));
+        g2.append("text")
+        .attr("y", (17 - j) * 20)
+        .attr("x", 960)
+        .attr("text-anchor", "begin")
+        .attr("stroke", "grayscale")
+        .attr("font-size", 12)
+        .attr("id", newArrayYear[j].Country)
+        .text(newArrayYear[j].Country);    
+        }
+        
+
+        svg2.selectAll(".dot")
+        .data(newArrayYear)
+        .enter().append("circle")
+        .attr("cx", function(d) {
+            return xScale2(d.Lifeexpectancy);
+        })
+        .attr("cy", function(d) {
+            return yScale2(d.HDI);
+        })
+        .attr("r", 5)
+        .attr("fill", function(d) { return colorScale2(d.Country);});
+        });
+
+
+        
+ 
+        
+
+        //Mouse in and out events
+        function onMouseOverPath1(d, i) {
+        d3.select(this)
+        .attr('stroke', "red");
+        d3.selectAll("#" + this.id + "path1")
+        .style("stroke-width", 5)
+        }
+
+        function onMouseOutPath1(d, i) {
+        d3.select(this)
+        .attr('stroke', "grayscale");
+        d3.selectAll("#" + this.id + "path1")
+        .style("stroke-width", 1.5)
+        }
+
+        function onMouseOverPath2(d, i) {
+        d3.select(this)
+        .attr('stroke', "red");
+        d3.selectAll("#" + this.id + "path2")
+          .style("stroke-width", 5)
+        }
+
+        function onMouseOutPath2(d, i) {
+        d3.select(this)
+        .attr('stroke', "grayscale");
+        d3.selectAll("#" + this.id + "path2")
+        .style("stroke-width", 1.5)
+        }
+
+        //slide slideshow
+        var slideIndex = 1;
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+        showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+        showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+        var i;
+        var slides = document.getElementsByClassName("mySlides");
+        var dots = document.getElementsByClassName("dot");
+        if (n > slides.length) {
+        slideIndex = 1
+        }
+        if (n < 1) {
+        slideIndex = slides.length
+        }
+        for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+        }
+        for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "");
+        }
+        slides[slideIndex - 1].style.display = "block";
+        dots[slideIndex - 1].className += " active";
+        }
+
+
+        function  ChangePlot(){
+            var svg2 = d3.select("#LEHDIChart")
+            .attr("width", width - margin)
+            .attr("height", height - margin);
+            //Define X & Y axis
+            var xScale2 = d3.scaleLinear()
+            .domain([10,90])
+            .range([0, 650]);
+            var x_axis2 = d3.axisBottom()
+            .scale(xScale2);
+            var g2 = svg2.append("g");
+            g2.append("g")
+            .attr("transform", "translate(100," + 500 + ")")
+            .call(x_axis2);
+            
+            var yScale2 = d3.scaleLinear()
+            .domain([0.1, 1])
+            .range([600, 50]);
+            var y_axis2 = d3.axisLeft()
+            .scale(yScale2);
+            g2.append("g")
+            .attr("transform", "translate(100," + -100 + ")")
+            .call(y_axis2);
+            
+            var colorScale2 = d3.scaleOrdinal(d3.schemeCategory10);
+            d3.csv("HDI_LifeExpectancy_Data.csv", function(data) {
+            
+            //Getting distinct Countries from the list
+            var Country = data.map(function(obj) {
+            return obj.Country;
+            });
+            
+            
+
+            Country = Country.filter(function(v, i) {
+            return Country.indexOf(v) == i;
+            });
+
+            var selectedYear = document.getElementById("yearDrop").value
+            console.log(selectedYear)
+            
+            //get data only for a particular Year
+            var newArrayYear = data.filter(function(item) {
+                return item.Year == selectedYear;
+            });
+
+            
+            
+            svg2.selectAll("circle").remove();
+            svg2.selectAll(".dot")
+            .data(newArrayYear)
+            .enter().append("circle")
+            .attr("cx", function(d) {
+                return xScale2(d.Lifeexpectancy);
+            })
+            .attr("cy", function(d) {
+                return yScale2(d.HDI);
+            })
+            .attr("r", 5)
+            .attr("fill", function(d) { return colorScale2(d.Country);});
+
+            });
+        }
+      </script>
+   </body>
+
+</html>
+
