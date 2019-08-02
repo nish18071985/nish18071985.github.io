@@ -403,7 +403,7 @@
         }
         
 
-        svg2.selectAll(".dot")
+        g2.selectAll(".dot")
         .data(newArrayYear)
         .enter().append("circle")
         .attr("cx", function(d) {
@@ -491,23 +491,16 @@
             var xScale2 = d3.scaleLinear()
             .domain([10,90])
             .range([0, 650]);
-            var x_axis2 = d3.axisBottom()
-            .scale(xScale2);
-            var g2 = svg2.append("g");
-            g2.append("g")
-            .attr("transform", "translate(100," + 500 + ")")
-            .call(x_axis2);
+            
             
             var yScale2 = d3.scaleLinear()
             .domain([0.1, 1])
             .range([600, 50]);
-            var y_axis2 = d3.axisLeft()
-            .scale(yScale2);
-            g2.append("g")
-            .attr("transform", "translate(100," + -100 + ")")
-            .call(y_axis2);
+            
             
             var colorScale2 = d3.scaleOrdinal(d3.schemeCategory10);
+                          
+            var g2 = svg2.append("g");              
             d3.csv("HDI_LifeExpectancy_Data.csv", function(data) {
             
             //Getting distinct Countries from the list
@@ -532,7 +525,7 @@
             
             
             svg2.selectAll("circle").remove();
-            svg2.selectAll(".dot")
+            g2.selectAll(".dot")
             .data(newArrayYear)
             .enter().append("circle")
             .attr("cx", function(d) {
